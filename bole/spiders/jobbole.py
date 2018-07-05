@@ -91,12 +91,16 @@ class JobboleSpider(scrapy.Spider):
         article_item["front_image_url"]=[front_image_url]   #图片下载默认接受数组
         article_item["url_object_id"]=get_md5(response.url)
 
+
+        """
+        转换json文件，data类型冲突，屏蔽日期特殊处理
+        """
         #对创建日期特殊处理
-        from datetime import datetime
-        try:
-            create_date=datetime.strptime(create_date,'%Y/%m/%d').date()
-        except Exception as e:
-            create_date=datetime.now().date()
+        # from datetime import datetime
+        # try:
+        #     create_date=datetime.strptime(create_date,'%Y/%m/%d').date()
+        # except Exception as e:
+        #     create_date=datetime.now().date()
 
         article_item["create_date"]=create_date
 
