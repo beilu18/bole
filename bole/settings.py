@@ -25,7 +25,7 @@ ROBOTSTXT_OBEY = True
 #CONCURRENT_REQUESTS = 32
 
 # Configure a delay for requests for the same website (default: 0)
-# See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
+# See https://doc.scrapy.org/en/Flatest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
 #DOWNLOAD_DELAY = 3
 # The download delay setting will honor only one of:
@@ -64,9 +64,17 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'bole.pipelines.BolePipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'bole.pipelines.BolePipeline': 300,
+    'scrapy.pipelines.images.ImagesPipeline':200,
+}
+#item中的图片url，用于下载
+IMAGES_URLS_FIELD='front_image_url'
+#保存到当前文件所在目录
+project_dir=os.path.abspath(os.path.dirname(__file__))
+#图片保存位置
+IMAGES_STORE=os.path.join(project_dir,"images")
+
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
