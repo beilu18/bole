@@ -13,11 +13,12 @@ class BolePipeline(object):
         return item
 
 
-#自定义导出到本地json文件
+
 """
 __init__（）构建对象，打开文件，scrapy调用process_item函数，对数据进行处理，
 将数据已json格式写入文件，操作完成，关闭文件。
 """
+#自定义导出到本地json文件
 class JsonWithEncodingPipeline(object):
     #爬虫初始化调用
     def __init__(self):
@@ -36,7 +37,7 @@ class JsonWithEncodingPipeline(object):
         #关闭文件句柄
         self.file.close()
 
-#scrapy自带的的写入本地json文件的类
+#scrapy自带的的json export导出json文件
 class JsonExportPipline(object):
     def __init__(self):
         self.file=open('crticleExport.json','wb')

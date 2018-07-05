@@ -67,7 +67,14 @@ ROBOTSTXT_OBEY = True
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    # 'bole.pipelines.BolePipeline': 300,
-    'scrapy.pipelines.images.ImagesPipeline':200,
+
+    #定义图片下载
+    'scrapy.pipelines.images.ImagesPipeline':1,
+    #自定义导出到本地json文件
+    'bole.pipelines.JsonWithEncodingPipeline':2,
+    #scrapy自带的的json export导出json文件
+    'bole.pipelines.JsonExportPipline':3,
+
 }
 #item中的图片url，用于下载
 IMAGES_URLS_FIELD='front_image_url'
