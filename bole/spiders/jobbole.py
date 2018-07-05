@@ -3,6 +3,8 @@ import scrapy
 import re
 from scrapy.http import Request
 from urllib import parse
+from bole.items import BoleItem
+from bole.utils.common import get_md5
 
 class JobboleSpider(scrapy.Spider):
     name = 'jobbole'
@@ -37,15 +39,10 @@ class JobboleSpider(scrapy.Spider):
 
     def parse_detail(self, response):
         #文章封面图,通过回调函数callback，从parse函数中拿到图片url
-        front_image=response.meta.get("front_image_url","")
-
-
+        front_image_url=response.meta.get("front_image_url","")
 
         #标题
         title=response.css(".entry-header h1::text").extract_first()
-
-        #文章封面图
-        front_image_url = response.meta.get("front_image_url", "")
 
         #发布日期
         create_date=response.css(".entry-meta-hide-on-mobile::text").extract_first().strip().replace('·','').strip()
@@ -81,6 +78,29 @@ class JobboleSpider(scrapy.Spider):
         #去掉重复评论
         tag_list=[element for element in tag_lists if not element.strip().endswith("评论")]
         tags=",".join(tag_list)
+
+        #保存到items字典中
+        article_item=BoleItem()
+        article_item["title"]=title
+        article_item["pare_num"]=pare_num
+        article_item["collect_num"]=collect_num
+        article_item["comment_num"]=comment_num
+        article_item["content"]=content
+        article_item["tags"]=tags
+        article_item["url"]=response.url
+        article_item["front_image_url"]=[front_image_url]   #图片下载默认接受数组
+        article_item["url_object_id"]=get_md5(response.url)
+
+        #对创建日期特殊处理
+        from datetime import datetime
+        try:
+            create_date=datetime.strptime(create_date,'%Y/%m/%d').date()
+        except Exception as e:
+            create_date=datetime.now().date()
+
+        article_item["create_date"]=create_date
+
+        yield article_item
 
 
 
