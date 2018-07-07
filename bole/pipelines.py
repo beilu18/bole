@@ -76,7 +76,7 @@ class ArticleImagePipeline(ImagesPipeline):
 1、同步操作一条语句不执行完不会执行下一条语句。但是我们scrapy的解析速度很快如果入库的速度很慢的话就会造成阻塞
 """
 #同步写入mysql数据库
-class mysqlExportPipline(object):
+class MysqlExportPipline(object):
     def __init__(self):
         self.conn=pymysql.connect('localhost','root','123456','Crawler',charset='utf8',use_unicode=True)
         self.cursor=self.conn.cursor()  #获取连接对象
@@ -94,4 +94,44 @@ create_date,pare_num,collect_num,comment_num,tags)VALUES (%s,%s,%s,%s,%s,%s,%s,%
 
     def spider_closed(self,spider):
         self.conn.close()
+
+#使用Twisted 框架提供的异步方法入库mysql
+class MysqlTwistedPipline(object):
+    def __int__(self,dbpool):
+        self.dbpool=dbpool
+
+    @classmethod
+
+    def from_settings(cls,settings):
+        dbparms=dict(
+            host=settings["MYSQL_HOST"],
+            user=settings["MYSQL_USER"],
+            passwd=settings["MYSQL_PASSWORD"],
+            db=settings["MYSQL_DBNAME"],
+            charset="utf8",
+            cussorclass=pymysql.cursors.DictCursor,
+            use_unicode = True
+        )
+
+        dbpool = pymysql.connect("pymysql", **dbparms)
+        return cls(dbpool)
+
+    def process_item(self,item,spider):
+        # 使用twisted将mysql插入变成一部执行
+        query = self.dbpool.runInteraction(self.do_insert, item)
+        query.addErrback(self.handle_error)  # 处理异常
+
+    def handle_error(self, failure):
+        print(failure)
+
+        # 处理异步插入的异常
+
+    def do_insert(self,cursor,item):
+        insert_sql = """insert into Bole(url_object_id,title,url,front_image_url,front_image_path,
+        create_date,pare_num,collect_num,comment_num,tags)VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                        """
+        cursor.execute(insert_sql, (
+        item["url_object_id"], item["title"], item["url"], item["front_image_url"], item["front_image_path"],
+        item["create_date"], item["pare_num"], item["collect_num"], item["comment_num"], item["tags"]))
+
 

@@ -28,7 +28,7 @@ ROBOTSTXT_OBEY = True
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/Flatest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 0.1
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -74,12 +74,15 @@ ITEM_PIPELINES = {
     'bole.pipelines.ArticleImagePipeline':2,
 
     #自定义导出到本地json文件
-    'bole.pipelines.JsonWithEncodingPipeline':10,
+    # 'bole.pipelines.JsonWithEncodingPipeline':10,
     #scrapy自带的的json export导出json文件
-    'bole.pipelines.JsonExportPipline':11,
+    # 'bole.pipelines.JsonExportPipline':11,
 
     #同步操作数据库类
-    'bole.pipelines.mysqlExportPipline':20,
+    # 'bole.pipelines.MysqlExportPipline':20,
+
+    #异步操作数据库类
+    'bole.pipelines.MysqlExportPipline':21,
 
 
 
@@ -112,3 +115,10 @@ IMAGES_STORE=os.path.join(project_dir,"images")
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+
+#mysql数据库连接
+MYSQL_HOST = "localhost"
+MYSQL_USER = "root"
+MYSQL_PASSWORD = "123456"
+MYSQL_DBNAME="Crawler"
