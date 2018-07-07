@@ -70,10 +70,18 @@ ITEM_PIPELINES = {
 
     #定义图片下载
     'scrapy.pipelines.images.ImagesPipeline':1,
+    #定义图片下载路径
+    'bole.pipelines.ArticleImagePipeline':2,
+
     #自定义导出到本地json文件
-    'bole.pipelines.JsonWithEncodingPipeline':2,
+    'bole.pipelines.JsonWithEncodingPipeline':10,
     #scrapy自带的的json export导出json文件
-    'bole.pipelines.JsonExportPipline':3,
+    'bole.pipelines.JsonExportPipline':11,
+
+    #同步操作数据库类
+    'bole.pipelines.mysqlExportPipline':20,
+
+
 
 }
 #item中的图片url，用于下载
