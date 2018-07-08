@@ -78,11 +78,14 @@ ITEM_PIPELINES = {
     #scrapy自带的的json export导出json文件
     # 'bole.pipelines.JsonExportPipline':11,
 
-    #同步操作数据库类
+    #同步操作mysql数据库类
     # 'bole.pipelines.MysqlExportPipline':20,
 
-    #异步操作数据库类
-    'bole.pipelines.MysqlExportPipline':21,
+    #异步操作mysql数据库类
+    # 'bole.pipelines.MysqlExportPipline':21,
+
+    # 异步操作mongodb数据库类
+    'bole.pipelines.MongoPipline':22,
 
 
 
@@ -122,3 +125,7 @@ MYSQL_HOST = "localhost"
 MYSQL_USER = "root"
 MYSQL_PASSWORD = "123456"
 MYSQL_DBNAME="Crawler"
+
+#MongoDB数据库
+MONGO_URI='47.101.42.0'
+MONGO_DATABASE='zhihu'
